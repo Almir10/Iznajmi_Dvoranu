@@ -1,0 +1,22 @@
+Da biste instalirali Node.js, posetite zvaničnu stranicu za preuzimanje. Odaberite paket koji odgovara vašem operativnom sistemu i pratite uputstva za instalaciju. 
+Node.js dolazi sa npm-om (Node Package Manager), koji vam omogućava instalaciju i upravljanje JavaScript bibliotekama i alatima.
+
+https://nodejs.org/en/download/package-manager
+
+
+Za instalaciju MySQL baze podataka, idite na stranicu za preuzimanje MySQL-a. Preuzmite odgovarajući instalacijski paket za vaš operativni sistem. 
+Nakon preuzimanja, pokrenite instalacijski program i pratite uputstva da biste završili instalaciju (MySQL Workbench, MySQL Server, MySQL Shell)
+
+
+https://www.mysql.com/downloads/
+
+
+Razvojno okruzenje je opcionalno, sa tim da je koristen WebStorm, koji možete preuzet 
+i instalirati sa zvanične stranice: https://www.jetbrains.com/webstorm/download/?source=google&medium=cpc&campaign=EMEA_en_EAST_WebStorm_Branded&term=webstorm&content=523833970721&gad_source=1&gclid=CjwKCAjw0aS3BhA3EiwAKaD2Zf2Pqmhu6iC48qhXOHv78YhHHiDyELnoZcdV6vOfEDQd4Q3IVh_5BBoCNfsQAvD_BwE#section=windows
+Izaberite verziju za vaš operativni sistem i preuzmite instalacijski paket. Nakon preuzimanja, instalirajte WebStorm prateći standardna uputstva za instalaciju.
+
+
+Instalacija express framework-a je moguća uz node.js paket.
+Otvorite terminal i pokrenite sljedeći kod:
+ - npm install express
+
