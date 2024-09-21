@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title><%= title %></title>
+
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link href="/stylesheets/styles.css" rel="stylesheet" />
+
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+    }
+  </style>
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container px-5">
+    <a class="navbar-brand" href="#!">PronadjiDvoranu.ba</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+        <% if (korisnik) { %>
+          <li class="nav-item"><p class="nav-link">Dobrodošli, <%= korisnik.ime %>!</p></li>
+          <% if (korisnik.uloga === 'klijent') { %>
+            <li class="nav-item"><a class="nav-link" href="/klijentDashboard">Klijent Dashboard</a></li>
+          <% } else if (korisnik.uloga === 'vlasnik') { %>
+            <li class="nav-item"><a class="nav-link" href="/vlasnikDashboard">Vlasnički Panel</a></li>
+          <% } else if (korisnik.uloga === 'admin') { %>
+            <li class="nav-item"><a class="nav-link" href="/adminDashboard">Admin Dashboard</a></li>
+          <% } %>
+          <li class="nav-item">
+            <form action="/logout" method="post">
+              <button type="submit" class="btn btn-link nav-link">Odjava</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container px-4 px-lg-5">
+  <div class="pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Vlasnik Dashboard</h1>
+  </div>
+  <div class="text-end">
+    <a href="/vlasnikDashboard/add" class="btn btn-primary">Dodaj novu dvoranu</a>
+  </div>
+
+  <!-- Tabela dvorana -->
+  <div class="row gx-4 gx-lg-5 mb-5">
+    <div class="col-lg-12">
+      <h2>Dvorane</h2>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Naziv</th>
+          <th>Grad</th>
+          <th>Cijena</th>
+          <th>Akcije</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% dvorane.forEach(dvorana => { %>
+          <tr>
+            <td><%= dvorana.id %></td>
+            <td><%= dvorana.naziv %></td>
+            <td><%= dvorana.grad %></td>
+            <td><%= dvorana.cijena %></td>
+            <td>
+              <!-- Ukloni dvoranu button -->
+              <form action="/vlasnikDashboard/obrisiDvoranu/<%= dvorana.id %>" method="post">
+                <input type="hidden" name="dvoranaId" value="<%= dvorana.id %>">
+                <button type="submit" class="btn btn-danger">Ukloni dvoranu</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mb-5"></div>
+
+  <!-- Rezervacije sekcija -->
+  <div class="pt-3 pb-2 mb-3 border-bottom">
+    <h2>Rezervacije</h2>
+
+    <!-- Potvrđene rezervacije -->
+    <h3>Potvrđene</h3>
+    <table class="table table-bordered mb-4">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Dvorana</th>
+        <th>Datum rezervacije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% potvrdjene.forEach(rezervacija => { %>
+        <tr>
+          <td><%= rezervacija.id %></td>
+          <td><%= rezervacija.dvorana_naziv %></td>
+          <td><%= rezervacija.datum_rezervacije %></td>
+          <td>
+            <!-- Nema akcija za potvrđene rezervacije -->
+          </td>
+        </tr>
+      <% }); %>
+      </tbody>
+    </table>
+
+    <!-- Razmak između sekcija potvrđenih rezervacija i zahtjeva -->
+    <div class="mb-4"></div>
+
+    <!-- Zahtjevi za rezervacije -->
+    <h3>Zahtjevi</h3>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Dvorana</th>
+        <th>Datum rezervacije</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% zahtjevi.forEach(rezervacija => { %>
+        <tr>
+          <td><%= rezervacija.id %></td>
+          <td><%= rezervacija.dvorana_naziv %></td>
+          <td><%= rezervacija.datum_rezervacije %></td>
+          <td>
+            <!-- Prihvati rezervaciju button -->
+            <form action="/vlasnikDashboard/prihvatiRezervaciju/<%= rezervacija.id %>" method="post">
+              <input type="hidden" name="rezervacijaId" value="<%= rezervacija.id %>">
+              <button type="submit" class="btn btn-success">Prihvati</button>
+            </form>
+
+            <!-- Odbij rezervaciju button -->
+            <form action="/vlasnikDashboard/odbijRezervaciju/<%= rezervacija.id %>" method="post">
+              <input type="hidden" name="rezervacijaId" value="<%= rezervacija.id %>">
+              <button type="submit" class="btn btn-danger">Odbij</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="py-4 bg-light mt-auto">
+  <div class="container px-4 px-lg-5">
+    <div class="d-flex align-items-center justify-content-between small">
+      <div class="text-muted">Copyright &copy; PronadjiDvoranu</div>
+    </div>
+  </div>
+</footer>
+<!-- Core theme JS-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title><%= title %></title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link href="/stylesheets/styles.css" rel="stylesheet" />
+
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+    }
+  </style>
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container px-5">
+    <a class="navbar-brand" href="#!">PronadjiDvoranu.ba</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+        <% if (korisnik) { %>
+          <li class="nav-item"><p class="nav-link">Dobrodošli, <%= korisnik.ime %>!</p></li>
+          <% if (korisnik.uloga === 'klijent') { %>
+            <li class="nav-item"><a class="nav-link" href="/klijentDashboard">Klijent Dashboard</a></li>
+          <% } else if (korisnik.uloga === 'vlasnik') { %>
+            <li class="nav-item"><a class="nav-link" href="/vlasnikDashboard">Vlasnički Panel</a></li>
+          <% } else if (korisnik.uloga === 'admin') { %>
+            <li class="nav-item"><a class="nav-link" href="/adminDashboard">Admin Dashboard</a></li>
+          <% } %>
+          <li class="nav-item">
+            <form action="/logout" method="post">
+              <button type="submit" class="btn btn-link nav-link">Odjava</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container px-4 px-lg-5">
+
+  <div class="row gx-4 gx-lg-5 align-items-center my-5">
+    <div class="col-lg-12">
+      <h2>Potvrđene rezervacije</h2>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Dvorana</th>
+          <th>Datum rezervacije</th>
+          <th>Akcije</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% potvrdjene.forEach(rezervacija => { %>
+          <tr>
+            <td><%= rezervacija.dvorana_id %></td>
+            <td><%= rezervacija.datum_rezervacije %></td>
+            <td>
+              <form action="/klijentDashboard/cancelRezervacija/<%= rezervacija.id %>" method="post">
+                <input type="hidden" name="rezervacijaId" value="<%= rezervacija.id %>">
+                <button type="submit" class="btn btn-danger">Cancel</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-lg-12 mt-5">
+      <h2>Rezervacije na čekanju</h2>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Dvorana</th>
+          <th>Datum rezervacije</th>
+          <th>Akcije</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% pending.forEach(rezervacija => { %>
+          <tr>
+            <td><%= rezervacija.dvorana_id %></td>
+            <td><%= rezervacija.datum_rezervacije %></td>
+            <td>
+              <form action="/klijentDashboard/cancelRezervacija/<%= rezervacija.id %>" method="post">
+                <input type="hidden" name="rezervacijaId" value="<%= rezervacija.id %>">
+                <button type="submit" class="btn btn-danger">Cancel</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer class="py-5 bg-dark">
+  <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/scripts.js"></script>
+</body>
+
+</html>

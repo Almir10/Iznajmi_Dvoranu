@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>PronadjiDvoranu - Pronađite Idealnu Dvoranu za Vaš Event</title>
+
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link href="/stylesheets/styles.css" rel="stylesheet" />
+
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+    }
+  </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container px-5">
+    <a class="navbar-brand" href="#!">PronadjiDvoranu.ba</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+        <% if (korisnik) { %>
+          <li class="nav-item"><p class="nav-link">Dobrodošli, <%= korisnik.ime %>!</p></li>
+          <% if (korisnik.uloga === 'vlasnik') { %>
+            <li class="nav-item"><a class="nav-link" href="/vlasnikDashboard">Vlasnički Panel</a></li>
+          <% } else if (korisnik.uloga === 'admin') { %>
+            <li class="nav-item"><a class="nav-link" href="/adminDashboard">Admin Panel</a></li>
+          <% } else if (korisnik.uloga === 'klijent') { %>
+            <li class="nav-item"><a class="nav-link" href="/klijentDashboard">Klijent Dashboard</a></li>
+          <% } %>
+          <li class="nav-item"><form action="/logout" method="post">
+              <button type="submit" class="btn btn-link nav-link">Odjava</button>
+            </form></li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/registration">Registracija</a></li>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 align-items-center my-5">
+    <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://images.adsttc.com/media/images/5293/fd3b/e8e4/4e91/9a00/009c/large_jpg/%C2%A9paul-ott_StMrtn_61.jpg?1385430319" alt="..." /></div>
+    <div class="col-lg-5">
+      <h1 class="font-weight-light">Pronadite Idealnu Dvoranu za Vaš Event</h1>
+      <p>Naša platforma vam omogućava da pronađete i rezervišete savršene dvorane za bilo koji događaj. Pretražujte prema lokaciji, cijeni, dostupnosti, i drugim kriterijumima kako bi pronašli najbolje opciju za vaše potrebe.</p>
+    </div>
+  </div>
+  <div class="card text-white bg-secondary my-5 py-4 text-center">
+    <div class="card-body"><p class="text-white m-0">Neka vaša sljedeća prilika bude savršena - pronađite i rezervišite idealnu dvoranu danas!</p></div>
+  </div>
+  <div class="row gx-4 gx-lg-5">
+    <!-- Iteriranje kroz dvorane iz modela -->
+    <div class="row gx-4 gx-lg-5">
+      <% dvorane.forEach(function(dvorana) { %>
+        <div class="col-md-4 mb-5 travel-card">
+          <div class="card h-100">
+            <img class="card-img-top" src="<%= dvorana.slika %>" alt="Venue Image" style="max-height: 200px;">
+            <div class="card-body">
+              <h2><%= dvorana.naziv %></h2>
+              <p><strong>Grad:</strong> <%= dvorana.grad %></p>
+            </div>
+            <div class="card-footer">
+              <a href="/dvoranaDetalji/<%= dvorana.id %>" class="btn btn-info mr-2">Više informacija</a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</main>
+
+<footer class="py-5 bg-dark">
+  <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; PronadjiDvoranu 2024</p></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/scripts.js"></script>
+</body>
+</html>

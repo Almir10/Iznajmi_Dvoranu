@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    h1, h2, h3 {
+      color: #007bff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    .back-to-home {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Admin Dashboard</h1>
+  <a href="/" class="btn btn-primary back-to-home">Back to Home</a>
+
+  <!-- Upravljanje korisnicima -->
+  <div class="mt-5">
+    <h2>Upravljanje korisnicima</h2>
+    <h3>Klijenti</h3>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Ime</th>
+        <th>Email</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% klijenti.forEach(korisnik => { %>
+        <tr>
+          <td><%= korisnik.id %></td>
+          <td><%= korisnik.ime %></td>
+          <td><%= korisnik.email %></td>
+          <td>
+            <form action="/adminDashboard/obrisiKorisnika/<%= korisnik.id %>" method="post">
+              <input type="hidden" name="korisnikId" value="<%= korisnik.id %>">
+              <button type="submit" class="btn btn-danger">Obriši</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+      </tbody>
+    </table>
+
+    <h3>Vlasnici</h3>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Ime</th>
+        <th>Email</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% vlasnici.forEach(korisnik => { %>
+        <tr>
+          <td><%= korisnik.id %></td>
+          <td><%= korisnik.ime %></td>
+          <td><%= korisnik.email %></td>
+          <td>
+            <form action="/adminDashboard/obrisiKorisnika/<%= korisnik.id %>" method="post">
+              <input type="hidden" name="korisnikId" value="<%= korisnik.id %>">
+              <button type="submit" class="btn btn-danger">Obriši</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Upravljanje dvoranama -->
+  <div class="mt-5">
+    <h2>Upravljanje dvoranama</h2>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Naziv</th>
+        <th>Cijena</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% dvorane.forEach(dvorana => { %>
+        <tr>
+          <td><%= dvorana.id %></td>
+          <td><%= dvorana.naziv %></td>
+          <td><%= dvorana.cijena %> KM</td>
+          <td>
+            <form action="/adminDashboard/obrisiDvoranu/<%= dvorana.id %>" method="post">
+              <input type="hidden" name="dvoranaId" value="<%= dvorana.id %>">
+              <button type="submit" class="btn btn-danger">Obriši</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Upravljanje rezervacijama -->
+  <div class="mt-5">
+    <h2>Upravljanje rezervacijama</h2>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Datum rezervacije</th>
+        <th>Potvrđena</th>
+        <th>Dvorana ID</th>
+        <th>Klijent ID</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% rezervacije.forEach(rezervacija => { %>
+        <tr>
+          <td><%= rezervacija.id %></td>
+          <td><%= rezervacija.datum_rezervacije %></td>
+          <td><%= rezervacija.potvrdjena ? 'Da' : 'Ne' %></td>
+          <td><%= rezervacija.dvorana_id %></td>
+          <td><%= rezervacija.korisnik_id %></td>
+          <td>
+            <form action="/adminDashboard/obrisiRezervaciju/<%= rezervacija.id %>" method="post">
+              <input type="hidden" name="rezervacijaId" value="<%= rezervacija.id %>">
+              <button type="submit" class="btn btn-danger">Obriši</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

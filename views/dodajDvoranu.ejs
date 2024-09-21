@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dodaj Dvoranu</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<style>
+  body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  .back-box {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+  }
+  .card {
+    border-radius: 1rem;
+  }
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+</style>
+<body>
+
+<div class="back-box">
+  <a href="/vlasnikDashboard">Nazad na Dashboard</a>
+</div>
+
+<section class="vh-100" style="background-color: lightgreen;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong">
+          <div class="card-body p-5 text-center">
+            <h3 class="mb-5">Dodaj Dvoranu</h3>
+            <form action="/vlasnikDashboard/add" method="post">
+              <div class="form-outline mb-4">
+                <input type="text" id="naziv" name="naziv" class="form-control form-control-lg" required placeholder="Naziv dvorane" />
+              </div>
+              <div class="form-outline mb-4">
+                <input type="text" id="slika" name="slika" class="form-control form-control-lg" required placeholder="Link slike dvorane" />
+              </div>
+              <div class="form-outline mb-4">
+                <input type="text" id="grad" name="grad" class="form-control form-control-lg" required placeholder="Grad" />
+              </div>
+              <div class="form-outline mb-4">
+                <input type="text" id="postanski_broj" name="postanski_broj" class="form-control form-control-lg" required placeholder="Poštanski broj" />
+              </div>
+              <div class="form-outline mb-4">
+                <input type="text" id="ulica" name="ulica" class="form-control form-control-lg" required placeholder="Ulica" />
+              </div>
+              <div class="form-outline mb-4">
+                <input type="text" id="cijena" name="cijena" class="form-control form-control-lg" required placeholder="Dnevna cijena" />
+              </div>
+              <div class="form-check d-flex justify-content-start mb-4">
+                <input class="form-check-input" type="checkbox" id="automatske_rezervacije" name="automatske_rezervacije" />
+                <label class="form-check-label" for="automatske_rezervacije"> Automatske rezervacije </label>
+              </div>
+              <div class="form-outline mb-4" id="dostupniDani" style="display: none;">
+                <label for="dostupni_dani" class="form-label">Dostupni dani:</label>
+                <select multiple class="form-control" id="dostupni_dani" name="dostupni_dani[]">
+                  <option value="PONEDELJAK">Ponedeljak</option>
+                  <option value="UTORAK">Utorak</option>
+                  <option value="SRIJEDA">Srijeda</option>
+                  <option value="CETVRTAK">Četvrtak</option>
+                  <option value="PETAK">Petak</option>
+                  <option value="SUBOTA">Subota</option>
+                  <option value="NEDELJA">Nedelja</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block" type="submit">Dodaj dvoranu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('automatske_rezervacije').addEventListener('change', function() {
+    const daniWrapper = document.getElementById('dostupniDani');
+    if (this.checked) {
+      daniWrapper.style.display = 'block';
+    } else {
+      daniWrapper.style.display = 'none';
+    }
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

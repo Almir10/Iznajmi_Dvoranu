@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Small Business - Start Bootstrap Template</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link href="/stylesheets/styles.css" rel="stylesheet" />
+
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .venue-details {
+      margin-top: 50px;
+    }
+    .available-days {
+      font-size: 0.8em;
+      font-style: italic;
+      margin-top: 10px;
+    }
+    .reservation-button {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container px-5">
+    <a class="navbar-brand" href="#!">PronadjiDvoranu.ba</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/registration">Registracija</a></li>
+        <% if (korisnik) { %>
+          <li class="nav-item"><p class="nav-link">Dobrodošli, <%= korisnik.ime %>!</p></li>
+          <% if (korisnik.uloga === 'vlasnik') { %>
+            <li class="nav-item"><a class="nav-link" href="/vlasnikDashboard">Vlasnički Panel</a></li>
+          <% } %>
+          <li class="nav-item"><form action="/logout" method="post">
+              <button type="submit" class="btn btn-link nav-link">Odjava</button>
+            </form></li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container px-4 px-lg-5">
+  <div class="venue-details">
+    <h2 class="text-center mb-4"><%= dvorana.naziv %></h2>
+    <div class="row gx-4 gx-lg-5 align-items-center">
+      <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="<%= dvorana.slika %>" alt="Venue Image" /></div>
+      <div class="col-lg-5">
+        <p><strong>Grad:</strong> <%= dvorana.grad %></p>
+        <p><strong>Ulica:</strong> <%= dvorana.ulica %></p>
+        <p><strong>Postanski broj:</strong> <%= dvorana.postanski_broj %></p>
+        <p><strong>Dnevna cijena:</strong> <%= dvorana.cijena %></p>
+        <p><strong>Automatske rezervacije:</strong> <%= dvorana.automatske_rezervacije ? 'Da' : 'Ne' %></p>
+        <% if (dvorana.automatske_rezervacije) { %>
+          <p class="available-days">Dostupni dani: <%= dostupniDani.join(', ') %></p>
+        <% } %>
+        <!-- Opcija za biranje datuma rezervacije -->
+        <div class="form-group">
+          <label for="datum">Odaberite datum rezervacije:</label>
+          <input type="date" class="form-control" id="datum" name="datum">
+        </div>
+        <div class="reservation-button">
+          <button type="button" class="btn btn-primary" onclick="rezervisi()">Rezerviši</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+  <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/scripts.js"></script>
+
+<script>
+  var dostupniDani = JSON.parse('<%- JSON.stringify(dostupniDani) %>');
+  var zauzetiDani = JSON.parse('<%- JSON.stringify(zauzetiDani) %>');  // Dodajemo zauzete dane
+
+  // Mapiranje engleskih dana na naš format
+  var daniMap = {
+    'Monday': 'PONEDELJAK',
+    'Tuesday': 'UTORAK',
+    'Wednesday': 'SRIJEDA',
+    'Thursday': 'ČETVRTAK',
+    'Friday': 'PETAK',
+    'Saturday': 'SUBOTA',
+    'Sunday': 'NEDJELJA'
+  };
+
+  console.log('Dostupni dani:', dostupniDani);
+  console.log('Zauzeti dani:', zauzetiDani);  // Debug ispis
+
+  function rezervisi() {
+    var datumElement = document.getElementById('datum');
+    var datum = new Date(datumElement.value);
+
+    // Dobijanje trenutnog dana na engleskom jeziku
+    var danNaEngleskom = datum.toLocaleDateString('en-US', { weekday: 'long' });
+    var danNaBosanskom = daniMap[danNaEngleskom];
+
+    var automatskeRezervacije = <%= dvorana.automatske_rezervacije %>;
+
+    // Provera da li izabrani dan u sedmici pripada dostupnim danima
+    if (!dostupniDani.includes(danNaBosanskom)) {
+      alert("Dvorana nije dostupna za " + danNaBosanskom + ". Molimo odaberite drugi datum.");
+      return;  // Zaustavi dalje izvršavanje koda ako datum nije u dostupnim danima
+    }
+
+    var potvrdjena = automatskeRezervacije === 'true' ? 0 : 1;
+
+    if (automatskeRezervacije) {
+      if (!zauzetiDani.includes(datumElement.value)) {
+        // Dvorana je dostupna za taj dan, šaljemo POST zahtjev
+        fetch('/rezervacija', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            datum: datumElement.value,
+            dvoranaId: <%= dvorana.id %>,
+            automatskeRezervacije: automatskeRezervacije,
+            potvrdjena: automatskeRezervacije
+          }),
+        })
+                .then(response => response.text())
+                .then(message => {
+                  alert(message);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  alert('Došlo je do greške prilikom rezervacije.');
+                });
+      } else {
+        alert("Dvorana nije dostupna za " + danNaBosanskom + ". Molimo odaberite drugi datum.");
+      }
+    } else {
+      if (!zauzetiDani.includes(datumElement.value)) {
+        fetch('/rezervacija', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            datum: datumElement.value,
+            dvoranaId: <%= dvorana.id %>,
+            automatskeRezervacije: automatskeRezervacije,
+            potvrdjena: false
+          }),
+        })
+                .then(response => response.text())
+                .then(message => {
+                  alert(message);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  alert('Došlo je do greške prilikom rezervacije.');
+                });
+      } else {
+        alert("Dvorana nije dostupna za " + danNaBosanskom + ". Molimo odaberite drugi datum.");
+      }
+    }
+  }
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
